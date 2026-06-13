@@ -7,6 +7,11 @@ import net.blay09.mods.balm.core.BalmRegistrars;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.veivel.commandr.core.ChatScreenState;
+import com.github.veivel.commandr.core.MixinRelay;
+import com.github.veivel.commandr.history.HistoryManager;
+import com.github.veivel.commandr.history.InMemoryHistoryManager;
+
 
 public class Commandr {
 
@@ -22,8 +27,16 @@ public class Commandr {
         return Balm.config().getActiveConfig(CommandrConfig.class);
     }
 
+    public static void toggleSearchMode() {
+
+    }
+
     public static void initialize(BalmRegistrars registrars) {
         Balm.config().registerConfig(CommandrConfig.class);
+
+        HistoryManager historyManager = new InMemoryHistoryManager();
+        ChatScreenState chatScreenState = new ChatScreenState(historyManager);
+        MixinRelay.init(chatScreenState, historyManager);
 
         // registrars.blocks(ModBlocks::initialize);
         // registrars.items(ModItems::initialize);

@@ -10,6 +10,7 @@ import net.blay09.mods.kuma.api.ManagedKeyMapping;
 import net.minecraft.client.KeyMapping.Category;
 
 import com.github.veivel.commandr.Commandr;
+import com.github.veivel.commandr.core.ChatScreenState;
 
 import static com.github.veivel.commandr.Commandr.id;
 
@@ -25,8 +26,7 @@ public class ModKeyMappings {
                 KeyModifiers.of(KeyModifier.CONTROL)
             ))
             .handleScreenInput((event) -> {
-                Commandr.logger.info("awooga event {}", event.keyMapping());
-                Commandr.logger.info("awooga input {}", event.input());
+                ChatScreenState.getInstance().handleActionKey();
                 return true;
             })
             .ignoreScreenFocus()

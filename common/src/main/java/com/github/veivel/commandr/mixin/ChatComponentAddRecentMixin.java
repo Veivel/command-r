@@ -9,14 +9,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.github.veivel.commandr.core.MixinRelay;
 
-import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.components.ChatComponent;
 
-@Mixin(ChatScreen.class)
-public class ChatScreenRemovedMixin {
-
-  @Inject(at = @At("HEAD"), method = "removed")
-  public void removed(CallbackInfo ci) {
-    MixinRelay.setChatScreenStatus(false);
-  }
+@Mixin(ChatComponent.class)
+public class ChatComponentAddRecentMixin {
   
+  // TODO: make sure ChatComponent has no other entrypoints
+  @Inject(at = @At("HEAD"), method = "addRecentChat")
+  public void addRecentChat(final String message, CallbackInfo ci) {
+    MixinRelay.addToHistory(message);
+  }
 }

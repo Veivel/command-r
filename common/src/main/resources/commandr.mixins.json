@@ -8,8 +8,12 @@
   ],
   "client": [
     "ChatScreenInitMixin",
-    "ChatScreenCloseMixin",
-    "ChatScreenRemovedMixin"
+    "ChatScreenRemovedMixin",
+    "ChatScreenEditMixin",
+    "CommandSuggestionsUpdateMixin",
+    "ChatComponentAddRecentMixin",
+    "ChatScreenAccessor",
+    "CommandSuggestionsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
