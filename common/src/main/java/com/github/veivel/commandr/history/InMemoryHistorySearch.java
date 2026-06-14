@@ -3,6 +3,8 @@ package com.github.veivel.commandr.history;
 import java.util.Iterator;
 import java.util.List;
 
+import com.github.veivel.commandr.Commandr;
+
 import java.util.ArrayList;
 
 public class InMemoryHistorySearch implements HistorySearch {
@@ -15,6 +17,7 @@ public class InMemoryHistorySearch implements HistorySearch {
   private int prevReverseIndex; 
 
   public InMemoryHistorySearch(String query, List<String> list) {
+    Commandr.logger.info("Creating search of history: {}", list.subList(0, 7));
     this.query = query;
     this.data = list;
     this.iterator = data.iterator();
@@ -29,6 +32,10 @@ public class InMemoryHistorySearch implements HistorySearch {
       int index = this.prevList.size() - this.prevReverseIndex;
       this.prevReverseIndex -= 1;
       return this.prevList.get(index);
+    }
+
+    if (!this.hasNext()) {
+      return null;
     }
 
     // Find the first next item that matches the search query

@@ -15,7 +15,6 @@ import com.mojang.brigadier.suggestion.Suggestions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.CommandSuggestions;
-import net.minecraft.client.gui.components.CommandSuggestions.SuggestionsList;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -47,6 +46,10 @@ public class ChatScreenState {
   }
 
   private void replaceSuggestion(String text) {
+    if (text == null || text.isBlank()) {
+      return;
+    }
+
     // TODO: refactor Minecraft imports outta this class
     Screen screen = Minecraft.getInstance().screen;
     if (screen instanceof ChatScreen chatScreen) {
@@ -85,28 +88,30 @@ public class ChatScreenState {
   }
 
   public void handleActionKey() {
-    if (this.inSearchMode()) {
-      if (historySearch == null) {
-        this.historySearch = historyManager.search(this.searchQuery);
-      }
-      String message = this.historySearch.next();
-      Commandr.logger.info("searched v2, got: {}", message);
-
-      if (message == null) {
-        return;
-      }
-
-      String suggestion = message;
-      replaceSuggestion(suggestion);
-    } else {
+    if (!this.inSearchMode()) {
       this.toggleSearchMode();
     }
+
+    if (historySearch == null) {
+      this.historySearch = historyManager.search(this.searchQuery);
+    }
+
+    String message = this.historySearch.next();
+    Commandr.logger.info("searched v2, got: {}", message);
+
+    if (message == null) {
+      return;
+    }
+
+    String suggestion = message;
+    replaceSuggestion(suggestion);
   }
 
   public void setOpen(boolean val) {
     if (!val) {
       // Also disable search mode when closing ChatScreen
       this.searching = false;
+      this.historySearch = null;
     }
     this.open = val;
   }

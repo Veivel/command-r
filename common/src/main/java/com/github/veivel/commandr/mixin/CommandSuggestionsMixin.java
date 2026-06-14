@@ -14,7 +14,7 @@ import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 
 @Mixin(CommandSuggestions.class)
-public class CommandSuggestionsUpdateMixin {
+public class CommandSuggestionsMixin {
   
   @Inject(at = @At("HEAD"), method = "updateCommandInfo", cancellable = true)
   public void updateCommandInfo(CallbackInfo ci) {
@@ -34,8 +34,8 @@ public class CommandSuggestionsUpdateMixin {
     }
   }
 
-  // This method accepts a `Boolean allowSuggestions` parameter but
-  // the mixin will NOT allow it, I don't know why.
+  // The intercepted method actually accepts a `Boolean allowSuggestions` 
+  // parameter but the mixin will NOT allow it, I don't know why.
   @Inject(at = @At("HEAD"), method = "setAllowSuggestions", cancellable = true)
   public void setAllowSuggestions(CallbackInfo ci) {
     Commandr.logger.info("Running setAllowSuggestions");

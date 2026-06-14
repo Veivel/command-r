@@ -19,6 +19,15 @@ public class InMemoryHistoryManager implements HistoryManager {
   }
 
   @Override
+  public void appendAll(List<String> messages) {
+    // TODO: set size limit
+
+    // TODO: verify this reversing is correct
+    this.data.addAll(0, messages.reversed());
+    this.size += messages.size();
+  }
+
+  @Override
   public HistorySearch search(String query) {
     return new InMemoryHistorySearch(query, this.data);
   }

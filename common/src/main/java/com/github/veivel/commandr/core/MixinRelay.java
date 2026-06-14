@@ -1,5 +1,8 @@
 package com.github.veivel.commandr.core;
 
+
+import java.util.List;
+
 import com.github.veivel.commandr.Commandr;
 import com.github.veivel.commandr.history.HistoryManager;
 
@@ -10,6 +13,11 @@ public final class MixinRelay {
   public static void init(ChatScreenState chatScreenState, HistoryManager historyManager) {
     MixinRelay.chatScreenState = chatScreenState;
     MixinRelay.historyManager = historyManager;
+  }
+
+  public static void addAllToHistory(List<String> messages) {
+    Commandr.logger.info("adding to history: {} items", messages.size());
+    historyManager.appendAll(messages);
   }
 
   public static void addToHistory(String message) {

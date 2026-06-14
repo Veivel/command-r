@@ -7,13 +7,11 @@
   "mixins": [
   ],
   "client": [
-    "ChatScreenInitMixin",
-    "ChatScreenRemovedMixin",
-    "ChatScreenEditMixin",
-    "CommandSuggestionsUpdateMixin",
-    "ChatComponentAddRecentMixin",
+    "ChatComponentMixin",
     "ChatScreenAccessor",
-    "CommandSuggestionsAccessor"
+    "ChatScreenMixin",
+    "CommandSuggestionsAccessor",
+    "CommandSuggestionsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
