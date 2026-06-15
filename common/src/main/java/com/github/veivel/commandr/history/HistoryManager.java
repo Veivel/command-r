@@ -3,7 +3,7 @@ package com.github.veivel.commandr.history;
 import java.util.List;
 
 /**
- * A class that stores command & message history.
+ * A class that stores command and message history.
  * Delegates any search logic to the HistorySearch class.
  */
 public interface HistoryManager {

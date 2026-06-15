@@ -26,16 +26,25 @@ public final class MixinRelay {
   }
 
   public static Boolean inSearchMode() {
-    return chatScreenState.inSearchMode();
+    return chatScreenState.getIsSearching();
+  }
+
+  public static void clearSuggestion() {
+    Commandr.chatScreenController.clearSuggestion();
+    // TODO: also turn off searchMode?
   }
 
   public static void setChatScreenStatus(Boolean isOpen) {
     Commandr.logger.info("ChatScreen open status: {}", isOpen);
-    chatScreenState.setOpen(isOpen);
+    chatScreenState.setIsOpen(isOpen);
+    
+    if (!isOpen) {
+      Commandr.chatScreenController.clearSearch();
+    }
   }
 
   public static void setChatScreenQuery(String query) {
     Commandr.logger.info("search query: {}", query);
-    chatScreenState.setSearchQuery(query);
+    Commandr.chatScreenController.search(query);
   }
 }

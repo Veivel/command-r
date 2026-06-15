@@ -11,7 +11,8 @@
     "ChatScreenAccessor",
     "ChatScreenMixin",
     "CommandSuggestionsAccessor",
-    "CommandSuggestionsMixin"
+    "CommandSuggestionsMixin",
+    "SuggestionsListMixin"
   ],
   "injectors": {
     "defaultRequire": 1

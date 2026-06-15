@@ -7,30 +7,30 @@ import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
-import net.minecraft.client.KeyMapping.Category;
 
 import com.github.veivel.commandr.Commandr;
-import com.github.veivel.commandr.core.ChatScreenState;
 
 import static com.github.veivel.commandr.Commandr.id;
 
 public class ModKeyMappings {
 
-    public static ManagedKeyMapping yourKey;
+    public static ManagedKeyMapping reverseSearch;
 
     public static void initialize() {
 
-        Kuma.createKeyMapping(id("reverse-search"))
+        reverseSearch = Kuma.createKeyMapping(id("reverse-search"))
             .withDefault(InputBinding.key(
                 InputConstants.KEY_R, 
                 KeyModifiers.of(KeyModifier.CONTROL)
             ))
             .handleScreenInput((event) -> {
-                ChatScreenState.getInstance().handleActionKey();
+                Commandr.chatScreenController.handleActionKey();
                 return true;
             })
             .ignoreScreenFocus()
             .enableKeyRepeat()
             .build();
+
+        // TODO: add mapping for previous/back
     }
 }

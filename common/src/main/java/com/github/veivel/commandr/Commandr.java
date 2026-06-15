@@ -7,6 +7,7 @@ import net.blay09.mods.balm.core.BalmRegistrars;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.veivel.commandr.core.ChatScreenController;
 import com.github.veivel.commandr.core.ChatScreenState;
 import com.github.veivel.commandr.core.MixinRelay;
 import com.github.veivel.commandr.history.HistoryManager;
@@ -15,8 +16,8 @@ import com.github.veivel.commandr.history.InMemoryHistoryManager;
 
 public class Commandr {
 
+    public static ChatScreenController chatScreenController;
     public static final Logger logger = LoggerFactory.getLogger(Commandr.class);
-
     public static final String MOD_ID = "commandr";
 
     public static Identifier id(String path) {
@@ -27,20 +28,16 @@ public class Commandr {
         return Balm.config().getActiveConfig(CommandrConfig.class);
     }
 
-    public static void toggleSearchMode() {
-
-    }
-
     public static void initialize(BalmRegistrars registrars) {
         Balm.config().registerConfig(CommandrConfig.class);
 
         HistoryManager historyManager = new InMemoryHistoryManager();
-        ChatScreenState chatScreenState = new ChatScreenState(historyManager);
+        ChatScreenState chatScreenState = new ChatScreenState();
+        ChatScreenController chatScreenController = new ChatScreenController(chatScreenState, historyManager);
+        Commandr.chatScreenController = chatScreenController;
+
         MixinRelay.init(chatScreenState, historyManager);
 
-        // registrars.blocks(ModBlocks::initialize);
-        // registrars.items(ModItems::initialize);
-        // registrars.creativeModeTabs(ModItems::initialize);
     }
 
 }

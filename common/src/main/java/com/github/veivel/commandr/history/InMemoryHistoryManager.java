@@ -13,7 +13,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
   @Override
   public void append(String message) {
-    // TODO: set size limit
+    // TODO: set size limit, fixed to 100 because of Minecraft loading logic
     this.data.addFirst(message);
     this.size += 1;
   }
