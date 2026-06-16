@@ -32,14 +32,14 @@ public class InMemoryHistorySearch implements HistorySearch {
       return this.prevList.get(index);
     }
 
-    if (!this.hasNext()) {
+    if (!this.iterator.hasNext()) {
       return null;
     }
 
     // Find the first next item that matches the search query
     String nextItem = this.iterator.next();
     while (nextItem != null && !nextItem.contains(query)) {
-      if (!this.hasNext()) {
+      if (!this.iterator.hasNext()) {
         return null;
       }
       nextItem = this.iterator.next();
@@ -61,14 +61,5 @@ public class InMemoryHistorySearch implements HistorySearch {
     
     this.prevReverseIndex += 1;
     return this.prevList.get(index);
-  }
-
-  @Override
-  public Boolean hasNext() {
-    if (this.prevReverseIndex > 0) {
-      return true;
-    }
-
-    return this.iterator.hasNext();
   }
 }

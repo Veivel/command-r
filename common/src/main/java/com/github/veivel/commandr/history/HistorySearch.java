@@ -12,5 +12,5 @@ public interface HistorySearch {
 
   public String prev();
 
-  public Boolean hasNext();
+  // public Boolean hasNext();
 }

@@ -6,24 +6,41 @@ import java.util.List;
 public class InMemoryHistoryManager implements HistoryManager {
   private List<String> data;
   private Integer size = 0;
+  private Integer sizeLimit;
 
   public InMemoryHistoryManager() {
+    int DEFAULT_SIZE_LIMIT = 100;
+    this(DEFAULT_SIZE_LIMIT);
+  }
+
+  public InMemoryHistoryManager(Integer sizeLimit) {
+    this.sizeLimit = sizeLimit;
     this.data = new LinkedList<String>();
   }
 
   @Override
   public void append(String message) {
-    // TODO: set size limit, fixed to 100 because of Minecraft loading logic
+    if (this.size >= sizeLimit) {
+      this.data.removeLast();
+      this.size -= 1;
+    }
     this.data.addFirst(message);
     this.size += 1;
   }
 
   @Override
   public void appendAll(List<String> messages) {
-    // TODO: set size limit
+    // ASSUME: `messages` is ordered from oldest first to newest last.
 
-    // TODO: verify this reversing is correct
-    this.data.addAll(0, messages.reversed());
+    // If too many messages to be appended, truncate `messages`
+    if (messages.size() > this.sizeLimit){
+      messages = messages.subList(messages.size() - this.sizeLimit, messages.size());
+    }
+    // If total size after append will be too large, truncate current data
+    if (this.size + messages.size() > this.sizeLimit) {
+      this.data = this.data.subList(0, this.sizeLimit - messages.size());
+    }
+    this.data.addAll(0, messages.reversed()); // TODO: ensure Minecraft history is actually oldest-first->newest-last
     this.size += messages.size();
   }
 

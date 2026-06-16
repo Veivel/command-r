@@ -38,6 +38,7 @@ public class ChatScreenController {
 
     Screen screen = Minecraft.getInstance().screen;
     if (screen instanceof ChatScreen chatScreen) {
+
       CommandSuggestions commandSuggestions = ((ChatScreenAccessor) chatScreen).getCommandSuggestions();
       // EditBox editBox = ((ChatScreenInputAccessor) chatScreen).getInput();
 
