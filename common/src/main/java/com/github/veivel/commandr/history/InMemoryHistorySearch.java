@@ -15,7 +15,7 @@ public class InMemoryHistorySearch implements HistorySearch {
   private int prevReverseIndex; 
 
   public InMemoryHistorySearch(String query, List<String> list) {
-    // Commandr.logger.info("Creating search of history: {}", list.subList(0, 7));
+    // Commandr.logger.info("Creating search of query: {}", query);
     this.query = query;
     this.data = list;
     this.iterator = data.iterator();

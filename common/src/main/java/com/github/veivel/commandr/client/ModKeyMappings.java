@@ -14,11 +14,12 @@ import static com.github.veivel.commandr.Commandr.id;
 
 public class ModKeyMappings {
 
-    public static ManagedKeyMapping reverseSearch;
+    public static ManagedKeyMapping search;
+    public static ManagedKeyMapping previous;
 
     public static void initialize() {
 
-        reverseSearch = Kuma.createKeyMapping(id("reverse-search"))
+        search = Kuma.createKeyMapping(id("search"))
             .withDefault(InputBinding.key(
                 InputConstants.KEY_R, 
                 KeyModifiers.of(KeyModifier.CONTROL)
@@ -31,6 +32,18 @@ public class ModKeyMappings {
             .enableKeyRepeat()
             .build();
 
-        // TODO: add mapping for previous/back
+        previous = Kuma.createKeyMapping(id("previous"))
+            .withDefault(InputBinding.key(
+                InputConstants.KEY_R,
+                KeyModifiers.of(KeyModifier.CONTROL, KeyModifier.SHIFT)
+            ))
+            .handleScreenInput((event) -> {
+                Commandr.chatScreenController.handlePrevKey();
+                return true;
+            })
+            .ignoreScreenFocus()
+            .enableKeyRepeat()
+            .build();
+
     }
 }

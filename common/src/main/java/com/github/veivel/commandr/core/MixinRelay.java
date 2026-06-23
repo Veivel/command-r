@@ -8,6 +8,7 @@ import com.github.veivel.commandr.history.HistoryManager;
 
 public final class MixinRelay {
   public static ChatScreenState chatScreenState;
+  // TODO: refactor Controller to "own" state, so we can move state out of this class
   public static HistoryManager historyManager;
 
   public static void init(ChatScreenState chatScreenState, HistoryManager historyManager) {
@@ -45,6 +46,7 @@ public final class MixinRelay {
 
   public static void setChatScreenQuery(String query) {
     Commandr.logger.info("search query: {}", query);
-    Commandr.chatScreenController.search(query);
+    chatScreenState.setSearchQuery(query);
+    Commandr.chatScreenController.search();
   }
 }

@@ -12,6 +12,7 @@
     "ChatScreenMixin",
     "CommandSuggestionsAccessor",
     "CommandSuggestionsMixin",
+    "EditBoxMixin",
     "SuggestionsListMixin"
   ],
   "injectors": {

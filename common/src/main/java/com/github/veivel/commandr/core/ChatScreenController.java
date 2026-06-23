@@ -83,11 +83,11 @@ public class ChatScreenController {
     this.commandSuggestions.hide();
   }
 
-  public void search(String query) {
+  public void search() {
     if (!this.chatScreenState.getIsOpen()) {
       return;
     }
-    this.chatScreenState.setSearchQuery(query);
+    String query = this.chatScreenState.getSearchQuery();
     if (!this.chatScreenState.getIsSearching()) {
       return;
     }
@@ -98,6 +98,7 @@ public class ChatScreenController {
   }
 
   public void handleActionKey() {
+    // TODO: test when outside ChatScreen
     this.chatScreenState.setIsSearching(true);
     if (historySearch == null) {
       this.historySearch = historyManager.search(chatScreenState.getSearchQuery());
@@ -110,9 +111,21 @@ public class ChatScreenController {
     showSuggestion(message);
   }
 
+  public void handlePrevKey() {
+    // TODO: impl with this.historySearch.prev()
+    return;
+  }
+
+  public void handleEscKey() {
+    // TODO: impl, just disable search mode
+    return;
+  }
+
   // Delete any references to historySearch to prevent potential ConcurrentExceptions
   // TODO: does this even make a difference?
   public void clearSearch() {
+    // TODO: cannot disable search mode for some reason
+    Commandr.logger.info("Clearing search!");
     this.chatScreenState.setIsSearching(false);
     this.chatScreenState.setSearchQuery(""); // Not sure if this is needed
     this.historySearch = null;

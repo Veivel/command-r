@@ -1,5 +1,5 @@
 {
-  "key.category.commandr.default": "Command R",
-  "key.commandr.reverse-search": "Reverse Search (next)",
-  "key.commandr.reverse-search-prev": "Previous"
+  "key.category.commandr.default": "Command R (Reverse Search)",
+  "key.commandr.search": "Search Mode / Next",
+  "key.commandr.previous": "Previous"
 }
