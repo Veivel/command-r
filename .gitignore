@@ -27,5 +27,6 @@ logs
 
 common/src/generated/resources/.cache
 
+CLAUDE.md
 .claude
 .DS_Store
