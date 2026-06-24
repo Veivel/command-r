@@ -43,8 +43,8 @@ public class CommandSuggestionsMixin {
     checkAndCancel(ci);
   }
 
-  @Inject(at = @At("HEAD"), method = "hide")
-  public void hide(CallbackInfo ci) {
-    Commandr.logger.debug("Running hide");
-  }
+  // @Inject(at = @At("HEAD"), method = "hide")
+  // public void hide(CallbackInfo ci) {
+  //   Commandr.logger.debug("Running hide");
+  // }
 }

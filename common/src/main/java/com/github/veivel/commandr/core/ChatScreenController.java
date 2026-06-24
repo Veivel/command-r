@@ -23,10 +23,12 @@ public class ChatScreenController {
   private HistoryManager historyManager;
   private HistorySearch historySearch;
   private CommandSuggestions commandSuggestions;
+  private Boolean isSearchEmpty;
 
   public ChatScreenController(ChatScreenState chatScreenState, HistoryManager historyManager) {
     this.chatScreenState = chatScreenState;
     this.historyManager = historyManager;
+    this.isSearchEmpty = false;
   }
 
   // Shows the message as a pop-up CommandSuggestion, rather than
@@ -40,7 +42,6 @@ public class ChatScreenController {
     if (screen instanceof ChatScreen chatScreen) {
 
       CommandSuggestions commandSuggestions = ((ChatScreenAccessor) chatScreen).getCommandSuggestions();
-      // EditBox editBox = ((ChatScreenInputAccessor) chatScreen).getInput();
 
       // Create a java.util.List of one Suggestion object
       StringRange range = new StringRange(0, text.length());
@@ -54,12 +55,11 @@ public class ChatScreenController {
       future.complete(suggestions);
 
       // Use ChatScreen's CommandSuggestions instance by casting into our own CommandSuggestionsAccessor
-      Commandr.logger.info("Setting suggestion: {}", suggestion);
+      Commandr.logger.debug("Setting suggestion: {}", suggestion);
       ((CommandSuggestionsAccessor) commandSuggestions).setPendingSuggestions(future);
-      // ((CommandSuggestionsAccessor) commandSuggestions).setSuggestions(suggestionList);
-      Commandr.logger.info("Showing suggestions with visibility {}", commandSuggestions.isVisible());
+      Commandr.logger.debug("Showing suggestions with visibility {}", commandSuggestions.isVisible());
 
-      // TODO: immedateNarration?
+      // TODO: ensure immedateNarration==true doesn't cause unexpected issues
       commandSuggestions.showSuggestions(true);
       this.commandSuggestions = commandSuggestions;
     } else {
@@ -93,27 +93,45 @@ public class ChatScreenController {
     }
     this.historySearch = historyManager.search(query);
     String message = this.historySearch.next();
-    Commandr.logger.info("searched v1, got: {}", message);
+    Commandr.logger.info("searched (query edit), got: {}", message);
+    if (message == null) {
+      this.isSearchEmpty = true;
+      return;
+    }
+    this.isSearchEmpty = false;
     showSuggestion(message);
   }
 
   public void handleActionKey() {
-    // TODO: test when outside ChatScreen
+    // TODO: Fail earlier if current screen is NOT ChatScreen
     this.chatScreenState.setIsSearching(true);
     if (historySearch == null) {
       this.historySearch = historyManager.search(chatScreenState.getSearchQuery());
     }
     String message = this.historySearch.next();
-    Commandr.logger.info("searched v2, got: {}", message);
+    Commandr.logger.info("searched (action-key), got: {}", message);
     if (message == null) {
+      this.isSearchEmpty = true;
       return;
     }
+    this.isSearchEmpty = false;
     showSuggestion(message);
   }
 
   public void handlePrevKey() {
-    // TODO: impl with this.historySearch.prev()
-    return;
+    // TODO: Fail earlier if current screen is NOT ChatScreen
+    if (historySearch == null) {
+      return;
+    }
+    String message = this.historySearch.prev();
+    Commandr.logger.info("searched (prev-key), got: {}", message);
+    if (message == null) {
+      // Don't set isSearchEmpty as true here
+      // since we've returned to the start
+      return;
+    }
+    this.isSearchEmpty = false;
+    showSuggestion(message);
   }
 
   public void handleEscKey() {
@@ -121,13 +139,18 @@ public class ChatScreenController {
     return;
   }
 
-  // Delete any references to historySearch to prevent potential ConcurrentExceptions
-  // TODO: does this even make a difference?
   public void clearSearch() {
-    // TODO: cannot disable search mode for some reason
-    Commandr.logger.info("Clearing search!");
+    Commandr.logger.debug("Clearing search!");
     this.chatScreenState.setIsSearching(false);
     this.chatScreenState.setSearchQuery(""); // Not sure if this is needed
+    
+    // Delete any references to historySearch to prevent ConcurrentModificationException, 
+    // which is caused by a data structure being modified while there is a live iterator 
+    // over it.
     this.historySearch = null;
+  }
+
+  public Boolean getIsSearchEmpty() {
+    return this.isSearchEmpty;
   }
 }

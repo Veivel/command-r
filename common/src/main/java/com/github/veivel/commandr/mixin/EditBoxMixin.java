@@ -21,20 +21,28 @@ public abstract class EditBoxMixin extends AbstractWidget {
     super(x, y, width, height, message);
   }
 
+  // TODO: Make sure this has no other entry points
+  // TODO: refactor?
   @Inject(at = @At("HEAD"), method = "extractWidgetRenderState")
   public void extractWidgetRenderState(final GuiGraphicsExtractor graphics, final int mouseX, final int mouseY, final float a, CallbackInfo ci) {
-    // TODO: refactor?
-    int x = 4;
-    if (MixinRelay.inSearchMode()) {
-      Commandr.logger.info("x: {}, y: {}", x, this.getY());
-      graphics.text(
-        Minecraft.getInstance().fontFilterFishy, 
-        "bck-i-search:", 
-        x,
-        this.getY(), 
-        -9408400 // this.textColorUneditable
-      );
-      this.setX(x * (13 + 6)); // 1.5 * x * length of prefix string. this feels janky though
+    if (!MixinRelay.inSearchMode()) {
+      // TODO: set x back to 4
+      // needed for edge case where suggestion is used/applied and we
+      // go back to normal chat mode
+      return;
     }
+    int x = 4; // default this.x value for chat screen's EditBox
+    int textColor = -9408400; // this.textColorUneditable
+    if (MixinRelay.isSearchEmpty()) {
+      textColor = -43691; // ChatFormatting.RED
+    }
+    graphics.text(
+      Minecraft.getInstance().fontFilterFishy, 
+      "bck-i-search:", 
+      x,
+      this.getY(), 
+      textColor
+    );
+    this.setX(x * (13 + 6)); // 1.5 * x * length of prefix string. this feels janky though
   }
 }

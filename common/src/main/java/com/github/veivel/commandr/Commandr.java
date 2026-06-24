@@ -16,7 +16,6 @@ import com.github.veivel.commandr.history.InMemoryHistoryManager;
 
 public class Commandr {
 
-    public static ChatScreenController chatScreenController;
     public static final Logger logger = LoggerFactory.getLogger(Commandr.class);
     public static final String MOD_ID = "commandr";
 
@@ -34,10 +33,8 @@ public class Commandr {
         HistoryManager historyManager = new InMemoryHistoryManager();
         ChatScreenState chatScreenState = new ChatScreenState();
         ChatScreenController chatScreenController = new ChatScreenController(chatScreenState, historyManager);
-        Commandr.chatScreenController = chatScreenController;
 
-        MixinRelay.init(chatScreenState, historyManager);
-
+        MixinRelay.init(chatScreenState, chatScreenController, historyManager);
     }
 
 }

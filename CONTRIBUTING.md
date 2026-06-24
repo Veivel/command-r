@@ -1,7 +1,11 @@
-## Build:
+## Build
 
 ./gradlew build
 
-## Run tests:
+Or build only for one platform:
 
-./gradlew :common:test
+./gradlew :fabric:build
+
+## Run tests
+
+./gradlew test

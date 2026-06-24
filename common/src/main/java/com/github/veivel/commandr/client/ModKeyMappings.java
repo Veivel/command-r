@@ -8,7 +8,7 @@ import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
 
-import com.github.veivel.commandr.Commandr;
+import com.github.veivel.commandr.core.MixinRelay;
 
 import static com.github.veivel.commandr.Commandr.id;
 
@@ -19,26 +19,26 @@ public class ModKeyMappings {
 
     public static void initialize() {
 
-        search = Kuma.createKeyMapping(id("search"))
-            .withDefault(InputBinding.key(
-                InputConstants.KEY_R, 
-                KeyModifiers.of(KeyModifier.CONTROL)
-            ))
-            .handleScreenInput((event) -> {
-                Commandr.chatScreenController.handleActionKey();
-                return true;
-            })
-            .ignoreScreenFocus()
-            .enableKeyRepeat()
-            .build();
-
         previous = Kuma.createKeyMapping(id("previous"))
             .withDefault(InputBinding.key(
                 InputConstants.KEY_R,
                 KeyModifiers.of(KeyModifier.CONTROL, KeyModifier.SHIFT)
             ))
             .handleScreenInput((event) -> {
-                Commandr.chatScreenController.handlePrevKey();
+                MixinRelay.chatScreenController.handlePrevKey();
+                return true;
+            })
+            .ignoreScreenFocus()
+            .enableKeyRepeat()
+            .build();
+
+        search = Kuma.createKeyMapping(id("search"))
+            .withDefault(InputBinding.key(
+                InputConstants.KEY_R, 
+                KeyModifiers.of(KeyModifier.CONTROL)
+            ))
+            .handleScreenInput((event) -> {
+                MixinRelay.chatScreenController.handleActionKey();
                 return true;
             })
             .ignoreScreenFocus()

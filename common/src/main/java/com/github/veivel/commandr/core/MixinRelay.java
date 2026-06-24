@@ -9,11 +9,17 @@ import com.github.veivel.commandr.history.HistoryManager;
 public final class MixinRelay {
   public static ChatScreenState chatScreenState;
   // TODO: refactor Controller to "own" state, so we can move state out of this class
+  public static ChatScreenController chatScreenController;
   public static HistoryManager historyManager;
 
-  public static void init(ChatScreenState chatScreenState, HistoryManager historyManager) {
+  public static void init(
+    ChatScreenState chatScreenState,
+    ChatScreenController chatScreenController,
+    HistoryManager historyManager
+  ) {
     MixinRelay.chatScreenState = chatScreenState;
     MixinRelay.historyManager = historyManager;
+    MixinRelay.chatScreenController = chatScreenController;
   }
 
   public static void addAllToHistory(List<String> messages) {
@@ -30,23 +36,28 @@ public final class MixinRelay {
     return chatScreenState.getIsSearching();
   }
 
-  public static void clearSuggestion() {
-    Commandr.chatScreenController.clearSuggestion();
-    // TODO: also turn off searchMode?
+  public static void onUseSuggestion() {
+    chatScreenController.clearSuggestion();
+
+    chatScreenState.setIsSearching(false);
   }
 
   public static void setChatScreenStatus(Boolean isOpen) {
-    Commandr.logger.info("ChatScreen open status: {}", isOpen);
+    Commandr.logger.debug("ChatScreen open status: {}", isOpen);
     chatScreenState.setIsOpen(isOpen);
     
     if (!isOpen) {
-      Commandr.chatScreenController.clearSearch();
+      chatScreenController.clearSearch();
     }
   }
 
   public static void setChatScreenQuery(String query) {
-    Commandr.logger.info("search query: {}", query);
+    Commandr.logger.debug("Setting search query: {}", query);
     chatScreenState.setSearchQuery(query);
-    Commandr.chatScreenController.search();
+    chatScreenController.search();
+  }
+
+  public static boolean isSearchEmpty() {
+    return chatScreenController.getIsSearchEmpty();
   }
 }
