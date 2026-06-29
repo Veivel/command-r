@@ -1,22 +1,20 @@
 package com.github.veivel.commandr.mixin;
 
+import com.github.veivel.commandr.Commandr;
+import com.github.veivel.commandr.core.MixinRelay;
+import net.minecraft.client.gui.components.CommandSuggestions.SuggestionsList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.github.veivel.commandr.Commandr;
-import com.github.veivel.commandr.core.MixinRelay;
-
-import net.minecraft.client.gui.components.CommandSuggestions.SuggestionsList;
-
 @Mixin(SuggestionsList.class)
 public class SuggestionsListMixin {
 
-  @Inject(at = @At("HEAD"), method = "useSuggestion")
-  public void useSuggestion(CallbackInfo ci) {
-    // TODO: Make sure this has no other entry points
-    Commandr.logger.debug("useSuggestion called!");
-    MixinRelay.onUseSuggestion();
-  }
+    @Inject(at = @At("HEAD"), method = "useSuggestion")
+    public void useSuggestion(CallbackInfo ci) {
+        // TODO: Make sure this has no other entry points
+        Commandr.logger.debug("useSuggestion called!");
+        MixinRelay.onUseSuggestion();
+    }
 }

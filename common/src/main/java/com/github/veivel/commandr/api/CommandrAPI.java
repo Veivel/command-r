@@ -10,10 +10,19 @@ public class CommandrAPI {
 
     static {
         try {
-            __internalMethods = (InternalMethods) Class.forName("com.github.veivel.commandr.InternalMethodsImpl").getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            __internalMethods = (InternalMethods) Class.forName(
+                "com.github.veivel.commandr.InternalMethodsImpl"
+            )
+                .getConstructor()
+                .newInstance();
+        } catch (
+            InstantiationException
+            | IllegalAccessException
+            | InvocationTargetException
+            | NoSuchMethodException
+            | ClassNotFoundException e
+        ) {
             throw new RuntimeException(e);
         }
     }
-
 }

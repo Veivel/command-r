@@ -1,17 +1,16 @@
 package com.github.veivel.commandr.mixin;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
-
 import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ChatScreen.class)
 public interface ChatScreenAccessor {
-  @Accessor("input")
-  EditBox getInput();
+    @Accessor("input")
+    EditBox getInput();
 
-  @Accessor("commandSuggestions")
-  CommandSuggestions getCommandSuggestions();
+    @Accessor("commandSuggestions")
+    CommandSuggestions getCommandSuggestions();
 }

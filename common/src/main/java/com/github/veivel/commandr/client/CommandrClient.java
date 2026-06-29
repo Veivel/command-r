@@ -7,5 +7,4 @@ public class CommandrClient {
     public static void initialize(BalmClientRegistrars registrars) {
         ModKeyMappings.initialize();
     }
-
 }

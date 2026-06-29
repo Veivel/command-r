@@ -1,5 +1,7 @@
 plugins {
     id 'multiloader-common'
+    id 'org.jetbrains.changelog' version '2.2.0'
+    id 'com.diffplug.spotless' version '8.2.1'
     alias libs.plugins.modDevGradle
 }
 
@@ -21,6 +23,21 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// https://github.com/diffplug/spotless/blob/main/plugin-gradle/README.md
+spotless {
+  java {
+    importOrder()
+    removeUnusedImports()
+    forbidWildcardImports()
+    forbidModuleImports()
+
+    prettier(['prettier': '3.8.1', 'prettier-plugin-java': '2.8.1'])
+        .config(['parser': 'java', 'tabWidth': 4, 'plugins': ['prettier-plugin-java']])
+
+    formatAnnotations()
+  }
 }
 
 apply from: rootProject.file('repositories.gradle')
