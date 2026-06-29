@@ -1,6 +1,8 @@
 ## What is Command R?
 
-Command R is a mod that brings search functionality to your Minecraft chat. If you've ever used `reverse-i-search` from Bash, Zsh, or Powershell, this is basically the same.
+In just three words, it's "*reverse-i-search for Minecraft*".
+
+Command R is a mod that brings search functionality to your Minecraft chat messages and commands. If you've ever used `reverse-i-search` in a Bash, Zsh, or Powershell terminal, this is basically the same.
 
 Here is a 30-second video showcasing Command R:
 

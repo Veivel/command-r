@@ -23,12 +23,12 @@ public final class MixinRelay {
   }
 
   public static void addAllToHistory(List<String> messages) {
-    Commandr.logger.info("adding to history: {} items", messages.size());
+    Commandr.logger.debug("adding to history: {} items", messages.size());
     historyManager.appendAll(messages);
   }
 
   public static void addToHistory(String message) {
-    Commandr.logger.info("adding to history: {}", message);
+    Commandr.logger.debug("adding to history: {}", message);
     historyManager.append(message);
   }
 
@@ -37,15 +37,13 @@ public final class MixinRelay {
   }
 
   public static void onUseSuggestion() {
-    chatScreenController.clearSuggestion();
-
-    chatScreenState.setIsSearching(false);
+    chatScreenController.onUseSuggestion();
   }
 
   public static void setChatScreenStatus(Boolean isOpen) {
     Commandr.logger.debug("ChatScreen open status: {}", isOpen);
-    chatScreenState.setIsOpen(isOpen);
     
+    chatScreenState.setIsOpen(isOpen);
     if (!isOpen) {
       chatScreenController.clearSearch();
     }
@@ -53,8 +51,7 @@ public final class MixinRelay {
 
   public static void setChatScreenQuery(String query) {
     Commandr.logger.debug("Setting search query: {}", query);
-    chatScreenState.setSearchQuery(query);
-    chatScreenController.search();
+    chatScreenController.search(query);
   }
 
   public static boolean isSearchEmpty() {

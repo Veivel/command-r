@@ -67,7 +67,11 @@ public class ChatScreenController {
     }
   }
 
-  public void clearSuggestion() {
+  /**
+   * Runs after useSuggestion is called.
+   * This clears the shown suggestions and disables search mode.
+   */
+  public void onUseSuggestion() {
     if (!this.chatScreenState.getIsOpen() || !this.chatScreenState.getIsSearching()) {
       return;
     }
@@ -80,14 +84,19 @@ public class ChatScreenController {
       );
       return;
     }
+    // Clear suggestions
     this.commandSuggestions.hide();
+
+    // Disable search mode
+    chatScreenState.setIsSearching(false);
   }
 
-  public void search() {
+  public void search(String query) {
+    chatScreenState.setSearchQuery(query);
     if (!this.chatScreenState.getIsOpen()) {
       return;
     }
-    String query = this.chatScreenState.getSearchQuery();
+    // String query = this.chatScreenState.getSearchQuery();
     if (!this.chatScreenState.getIsSearching()) {
       return;
     }

@@ -16,8 +16,7 @@ public class SuggestionsListMixin {
   @Inject(at = @At("HEAD"), method = "useSuggestion")
   public void useSuggestion(CallbackInfo ci) {
     // TODO: Make sure this has no other entry points
-    // TODO: this doesnt seem to work at the moment
-    Commandr.logger.info("useSuggestion called!");
+    Commandr.logger.debug("useSuggestion called!");
     MixinRelay.onUseSuggestion();
   }
 }
