@@ -1,11 +1,28 @@
+## Development
+
+Command R uses Balm API for its multi-platform capability: https://balm.twelveiterations.com/getting-started
+
 ## Build
 
+Build:
+```
 ./gradlew build
+```
 
-Or build only for one platform:
-
+Build only for one platform:
+```
 ./gradlew :fabric:build
+```
 
-## Run tests
+## Tests
 
+Run tests:
+```
 ./gradlew test
+```
+
+Run tests with coverage:
+```
+./gradlew test jacocoTestReport
+```
+You'll find the coverage report in `common/build/reports/jacoco/test/html/index.html`.
