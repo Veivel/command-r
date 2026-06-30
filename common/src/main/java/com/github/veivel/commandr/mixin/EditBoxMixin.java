@@ -1,12 +1,11 @@
 package com.github.veivel.commandr.mixin;
 
 import com.github.veivel.commandr.core.MixinRelay;
+import com.github.veivel.commandr.core.gui.MinecraftScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,11 +33,9 @@ public abstract class EditBoxMixin extends AbstractWidget {
         final float a,
         CallbackInfo ci
     ) {
-        Screen screen = Minecraft.getInstance().screen;
-        if (!(screen instanceof ChatScreen)) {
-            // Making sure the logic below will not run
-            // on unrelated screens.
-            // TODO: there's gotta be a cleaner way to do this
+        // Making sure the logic below will not run
+        // on unrelated screens.
+        if (!MinecraftScreen.isCurrentChatScreen()) {
             return;
         }
 

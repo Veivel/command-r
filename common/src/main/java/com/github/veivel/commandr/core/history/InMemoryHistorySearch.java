@@ -1,10 +1,12 @@
-package com.github.veivel.commandr.history;
+package com.github.veivel.commandr.core.history;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class InMemoryHistorySearch implements HistorySearch {
+
+    // TODO: handle dedupe, where next() is same as current item (aka last result)
 
     private List<String> data;
     private String query;

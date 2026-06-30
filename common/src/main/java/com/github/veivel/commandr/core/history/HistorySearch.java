@@ -1,4 +1,4 @@
-package com.github.veivel.commandr.history;
+package com.github.veivel.commandr.core.history;
 
 /**
  * Classes that implement this interface are classes performing

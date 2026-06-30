@@ -1,4 +1,4 @@
-package com.github.veivel.commandr.core;
+package com.github.veivel.commandr.core.screen;
 
 import com.github.veivel.commandr.Commandr;
 

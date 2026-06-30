@@ -1,10 +1,10 @@
 package com.github.veivel.commandr;
 
-import com.github.veivel.commandr.core.ChatScreenController;
-import com.github.veivel.commandr.core.ChatScreenState;
 import com.github.veivel.commandr.core.MixinRelay;
-import com.github.veivel.commandr.history.HistoryManager;
-import com.github.veivel.commandr.history.InMemoryHistoryManager;
+import com.github.veivel.commandr.core.history.HistoryManager;
+import com.github.veivel.commandr.core.history.InMemoryHistoryManager;
+import com.github.veivel.commandr.core.screen.ChatScreenController;
+import com.github.veivel.commandr.core.screen.ChatScreenState;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.minecraft.resources.Identifier;
