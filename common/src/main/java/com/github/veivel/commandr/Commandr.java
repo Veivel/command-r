@@ -1,6 +1,7 @@
 package com.github.veivel.commandr;
 
 import com.github.veivel.commandr.core.MixinRelay;
+import com.github.veivel.commandr.core.gui.SuggestionController;
 import com.github.veivel.commandr.core.history.HistoryManager;
 import com.github.veivel.commandr.core.history.InMemoryHistoryManager;
 import com.github.veivel.commandr.core.screen.ChatScreenController;
@@ -29,11 +30,18 @@ public class Commandr {
 
         HistoryManager historyManager = new InMemoryHistoryManager();
         ChatScreenState chatScreenState = new ChatScreenState();
+        SuggestionController suggestionController = new SuggestionController();
         ChatScreenController chatScreenController = new ChatScreenController(
             chatScreenState,
-            historyManager
+            historyManager,
+            suggestionController
         );
 
-        MixinRelay.init(chatScreenState, chatScreenController, historyManager);
+        MixinRelay.init(
+            chatScreenState,
+            chatScreenController,
+            historyManager,
+            suggestionController
+        );
     }
 }

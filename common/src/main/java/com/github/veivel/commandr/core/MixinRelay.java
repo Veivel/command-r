@@ -1,7 +1,7 @@
 package com.github.veivel.commandr.core;
 
 import com.github.veivel.commandr.Commandr;
-import com.github.veivel.commandr.core.gui.SuggestionView;
+import com.github.veivel.commandr.core.gui.SuggestionController;
 import com.github.veivel.commandr.core.history.HistoryManager;
 import com.github.veivel.commandr.core.screen.ChatScreenController;
 import com.github.veivel.commandr.core.screen.ChatScreenState;
@@ -13,11 +13,13 @@ public final class MixinRelay {
     // TODO: refactor Controller to "own" state, so we can move state out of MixinRelay
     public static ChatScreenController chatScreenController;
     public static HistoryManager historyManager;
+    public static SuggestionController suggestionController;
 
     public static void init(
         ChatScreenState chatScreenState,
         ChatScreenController chatScreenController,
-        HistoryManager historyManager
+        HistoryManager historyManager,
+        SuggestionController suggestionController
     ) {
         MixinRelay.chatScreenState = chatScreenState;
         MixinRelay.historyManager = historyManager;
@@ -39,7 +41,7 @@ public final class MixinRelay {
     }
 
     public static void onUseSuggestion() {
-        SuggestionView.onUseSuggestion();
+        suggestionController.onUseSuggestion();
         chatScreenController.clearSearch();
     }
 

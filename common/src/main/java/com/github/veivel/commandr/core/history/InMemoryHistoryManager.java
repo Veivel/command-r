@@ -44,7 +44,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (this.size + messages.size() > this.sizeLimit) {
             this.data = this.data.subList(0, this.sizeLimit - messages.size());
         }
-        this.data.addAll(0, messages.reversed()); // TODO: ensure Minecraft history is actually oldest-first->newest-last
+        this.data.addAll(0, messages.reversed()); // Minecraft's built-in history is actually oldest-first->newest-last
         this.size += messages.size();
     }
 

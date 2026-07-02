@@ -13,18 +13,21 @@ import net.minecraft.client.gui.components.CommandSuggestions;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 
-// TODO: make not static
+public class SuggestionController {
 
-public class SuggestionView {
+    private CommandSuggestions commandSuggestions;
 
-    private static CommandSuggestions commandSuggestions;
+    public SuggestionController() {
+        this(null);
+    }
+
+    public SuggestionController(CommandSuggestions commandSuggestions) {
+        this.commandSuggestions = commandSuggestions;
+    }
 
     // Shows the message as a pop-up CommandSuggestion, rather than
     // an inline auto-complete suggestion.
-    public static void showSuggestion(
-        String searchQuery,
-        String suggestionText
-    ) {
+    public void showSuggestion(String searchQuery, String suggestionText) {
         if (suggestionText == null || suggestionText.isBlank()) {
             return;
         }
@@ -63,7 +66,7 @@ public class SuggestionView {
 
             // TODO: ensure immedateNarration==true doesn't cause unexpected issues
             commandSuggestions.showSuggestions(true);
-            SuggestionView.commandSuggestions = commandSuggestions;
+            this.commandSuggestions = commandSuggestions;
         } else {
             Commandr.logger.error(
                 "Screen is wrong class: {}",
@@ -76,12 +79,12 @@ public class SuggestionView {
      * Runs after useSuggestion is called.
      * This clears the shown suggestions and disables search mode.
      */
-    public static void onUseSuggestion() {
-        if (SuggestionView.commandSuggestions == null) {
+    public void onUseSuggestion() {
+        if (this.commandSuggestions == null) {
             Commandr.logger.error("CommandSuggestionsAccessor does not exist.");
             return;
         }
         // Clear suggestions
-        SuggestionView.commandSuggestions.hide();
+        this.commandSuggestions.hide();
     }
 }

@@ -2,7 +2,7 @@ package com.github.veivel.commandr.core.screen;
 
 import com.github.veivel.commandr.Commandr;
 import com.github.veivel.commandr.core.gui.MinecraftScreen;
-import com.github.veivel.commandr.core.gui.SuggestionView;
+import com.github.veivel.commandr.core.gui.SuggestionController;
 import com.github.veivel.commandr.core.history.HistoryManager;
 import com.github.veivel.commandr.core.history.HistorySearch;
 
@@ -10,15 +10,19 @@ public class ChatScreenController {
 
     private ChatScreenState chatScreenState;
     private HistoryManager historyManager;
+    private SuggestionController suggestionController;
+
     private HistorySearch historySearch;
     private Boolean isSearchEmpty;
 
     public ChatScreenController(
         ChatScreenState chatScreenState,
-        HistoryManager historyManager
+        HistoryManager historyManager,
+        SuggestionController suggestionController
     ) {
         this.chatScreenState = chatScreenState;
         this.historyManager = historyManager;
+        this.suggestionController = suggestionController;
         this.isSearchEmpty = false;
     }
 
@@ -39,7 +43,7 @@ public class ChatScreenController {
             return;
         }
         this.isSearchEmpty = false;
-        SuggestionView.showSuggestion(query, message);
+        this.suggestionController.showSuggestion(query, message);
     }
 
     public void handleActionKey() {
@@ -59,7 +63,7 @@ public class ChatScreenController {
             return;
         }
         this.isSearchEmpty = false;
-        SuggestionView.showSuggestion(
+        this.suggestionController.showSuggestion(
             this.chatScreenState.getSearchQuery(),
             message
         );
@@ -80,7 +84,7 @@ public class ChatScreenController {
             return;
         }
         this.isSearchEmpty = false;
-        SuggestionView.showSuggestion(
+        this.suggestionController.showSuggestion(
             this.chatScreenState.getSearchQuery(),
             message
         );
