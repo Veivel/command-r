@@ -41,11 +41,13 @@ public class InMemoryHistoryManager implements HistoryManager {
             );
         }
         // If total size after append will be too large, truncate current data
-        if (this.size + messages.size() > this.sizeLimit) {
-            this.data = this.data.subList(0, this.sizeLimit - messages.size());
+        int totalSize = this.size + messages.size();
+        while (totalSize > this.sizeLimit) {
+            this.data.removeLast();
+            totalSize -= 1;
         }
         this.data.addAll(0, messages.reversed()); // Minecraft's built-in history is actually oldest-first->newest-last
-        this.size += messages.size();
+        this.size = totalSize;
     }
 
     @Override

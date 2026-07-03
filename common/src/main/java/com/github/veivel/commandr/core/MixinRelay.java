@@ -24,6 +24,7 @@ public final class MixinRelay {
         MixinRelay.chatScreenState = chatScreenState;
         MixinRelay.historyManager = historyManager;
         MixinRelay.chatScreenController = chatScreenController;
+        MixinRelay.suggestionController = suggestionController;
     }
 
     public static void addAllToHistory(List<String> messages) {
