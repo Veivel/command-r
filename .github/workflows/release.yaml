@@ -4,12 +4,16 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'The tag name to be used for this released. Must already exist'
+        description: 'The tag name to be used for this release.'
         required: true
         type: string
-  push:
-    tags:
-      - '*'
+      prerelease:
+        description: 'Whether this tag is a pre-release or not. Default to false'
+        required: true
+        type: boolean
+  # push:
+  #   tags:
+  #     - '*'
 
 jobs:
   build:
@@ -66,6 +70,10 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v3
       with:
+        name: $FINAL-TAG
+        tag_name: $FINAL_TAG
+        generate_release_notes: true
+        prerelease: false
         files: |
           $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar
           $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-$FINAL_TAG.jar
