@@ -1,0 +1,72 @@
+name: Release a New Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'The tag name to be used for this released. Must already exist'
+        required: true
+        type: string
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+
+    - name: Validate variables
+      run: |
+        echo "Inputs: $REF_TYPE, $GITHUB_REF, $TAG"
+        if [[ "$REF_TYPE" = "tag" ]]; then
+          echo "Run via tag!"
+          echo "FINAL_TAG=$GITHUB_REF" >> $GITHUB_ENV
+        elif [[ ! -z "$TAG" ]]; then
+          echo "Run via workflow dispatch, tag is supplied: $TAG"
+          echo "FINAL_TAG=$TAG" >> $GITHUB_ENV
+        else
+          echo "Run via workflow dispatch, tag not supplied"
+        fi
+      env:
+        REF_TYPE: ${{ github.ref_type }}
+        TAG: ${{ inputs.tag }}
+
+    - name: Check out repository
+      uses: actions/checkout@v7
+
+    - name: Set up JDK
+      uses: actions/setup-java@v5
+      with:
+        java-version: '25'
+        distribution: 'oracle'
+        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v6
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew :fabricbuild
+
+    - name: Show output files
+      run: |
+        ls $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar && \
+        ls $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-$FINAL_TAG.jar && \
+        ls $GITHUB_WORKSPACE/neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v3
+      with:
+        files: |
+          $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar
+          $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-$FINAL_TAG.jar
+          $GITHUB_WORKSPACE/neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
