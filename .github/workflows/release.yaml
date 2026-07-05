@@ -39,7 +39,7 @@ jobs:
         fi
 
         if [[ "$PRERELEASE" = "true" ]]; then
-          FINAL_TAG=$FINAL_TAG"-PRERELEASE
+          FINAL_TAG="$FINAL_TAG"-SNAPSHOT
         fi
 
         echo "FINAL_TAG=$FINAL_TAG" >> $GITHUB_ENV
