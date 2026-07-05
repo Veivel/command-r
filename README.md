@@ -11,7 +11,7 @@ Command R is a mod that brings search functionality to your Minecraft chat messa
 
 Here is a 30-second video showcasing Command R:
 
-<!-- TODO -->
+![](docs/command-r-demo.gif)
 
 ## Features
 
