@@ -33,6 +33,10 @@ public class SuggestionController {
         }
 
         Screen screen = MinecraftScreen.getCurrent();
+        if (screen == null) {
+            return;
+        }
+        
         if (screen instanceof ChatScreen chatScreen) {
             CommandSuggestions commandSuggestions = (
                 (ChatScreenAccessor) chatScreen
