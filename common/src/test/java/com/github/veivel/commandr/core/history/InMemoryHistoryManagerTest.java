@@ -20,12 +20,22 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void searchReturnsNewestMatchingEntry() {
+    void prefixSearchReturnsNewestMatchingEntry() {
         history.append("something is not wrong");
         history.append("something is wrong");
         HistorySearch searchResult = history.search("somethi");
 
         assert searchResult.next() == "something is wrong";
+    }
+
+    @Test
+    void partialSearchReturnsNewestMatchingEntry() {
+        history.append("something is not wrong");
+        history.append("something is wrong");
+        HistorySearch searchResult = history.search("ron");
+
+        assert searchResult.next() == "something is wrong";
+        assert searchResult.next() == "something is not wrong";
     }
 
     @Test
@@ -50,23 +60,47 @@ class InMemoryHistoryManagerTest {
     @Test
     void prevReturnsLastVisitedResult() {
         history.append("x");
-        history.append("something is not wrong");
+        history.append("something 1");
         history.append("x");
-        history.append("something is wrong");
+        history.append("something 2");
         history.append("x");
-        history.append("something is correct");
+        history.append("something 3");
         history.append("x");
 
         HistorySearch searchResult = history.search("s");
 
-        assert searchResult.next() == "something is correct";
-        assert searchResult.next() == "something is wrong";
-        assert searchResult.next() == "something is not wrong";
-        assert searchResult.prev() == "something is wrong";
-        assert searchResult.next() == "something is not wrong";
-        assert searchResult.prev() == "something is wrong";
-        assert searchResult.prev() == "something is correct";
-        assert searchResult.prev() == null;
+        assert searchResult.next() == "something 3";
+        assert searchResult.next() == "something 2";
+        assert searchResult.next() == "something 1";
+        assert searchResult.prev() == "something 2";
+        assert searchResult.next() == "something 1";
+        assert searchResult.prev() == "something 2";
+        assert searchResult.prev() == "something 3";
+    }
+
+    @Test
+    void searchDoesNotDedupeResults() {
+        // this behaviour is still tentative
+        // but is accounted for in tests
+
+        history.append("something 2");
+        history.append("x");
+        history.append("something 1");
+        history.append("x");
+        history.append("something 1");
+        history.append("x");
+        history.append("something 1");
+        history.append("something 3");
+        history.append("x");
+
+        HistorySearch searchResult = history.search("methi");
+
+        assert searchResult.next() == "something 3";
+        assert searchResult.next() == "something 1";
+        assert searchResult.next() == "something 1";
+        assert searchResult.next() == "something 1";
+        assert searchResult.next() == "something 2";
+        assert searchResult.next() == null;
     }
 
     @Test
@@ -81,6 +115,21 @@ class InMemoryHistoryManagerTest {
         assert searchResult.next() == "z";
         assert searchResult.next() == "xz";
         assert searchResult.next() == null;
+    }
+
+    @Test
+    void prevReturnsNullWhenExhausted() {
+        history.append("x");
+        history.append("xz");
+        history.append("y");
+        history.append("z");
+
+        HistorySearch searchResult = history.search("z");
+
+        assert searchResult.next() == "z";
+        assert searchResult.next() == "xz";
+        assert searchResult.prev() == "z";
+        assert searchResult.prev() == null;
     }
 
     @Test
