@@ -39,6 +39,29 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void emptyQueryMatchesAllEntriesIncludingEmptyString() {
+        history.append("");
+        history.append("something");
+        history.append("another thing");
+
+        HistorySearch searchResult = history.search("");
+
+        assert searchResult.next() == "another thing";
+        assert searchResult.next() == "something";
+        assert searchResult.next() == "";
+        assert searchResult.next() == null;
+    }
+
+    @Test
+    void searchIsCaseSensitive() {
+        history.append("something is wrong");
+
+        HistorySearch searchResult = history.search("SOMETHING");
+
+        assert searchResult.next() == null;
+    }
+
+    @Test
     void searchFiltersOutNonMatchingEntries() {
         history.append("something is not wrong");
         history.append("this shouldn't match");
@@ -55,6 +78,41 @@ class InMemoryHistoryManagerTest {
         assert searchResult.next() == "eat something ice";
         assert searchResult.next() == "something is wrong";
         assert searchResult.next() == "something is not wrong";
+    }
+
+    @Test
+    void prevReturnsNullBeforeAnyNextCall() {
+        history.append("something");
+
+        HistorySearch searchResult = history.search("something");
+
+        assert searchResult.prev() == null;
+    }
+
+    @Test
+    void nextResumesCorrectlyAfterPrevWalksBackToStart() {
+        history.append("x");
+        history.append("a1");
+        history.append("x");
+        history.append("a2");
+        history.append("x");
+        history.append("a3");
+        history.append("x");
+
+        HistorySearch searchResult = history.search("a");
+
+        assert searchResult.next() == "a3";
+        assert searchResult.next() == "a2";
+        assert searchResult.next() == "a1";
+        assert searchResult.next() == null;
+
+        assert searchResult.prev() == "a2";
+        assert searchResult.prev() == "a3";
+        assert searchResult.prev() == null;
+
+        assert searchResult.next() == "a2";
+        assert searchResult.next() == "a1";
+        assert searchResult.next() == null;
     }
 
     @Test
@@ -114,6 +172,7 @@ class InMemoryHistoryManagerTest {
 
         assert searchResult.next() == "z";
         assert searchResult.next() == "xz";
+        assert searchResult.next() == null;
         assert searchResult.next() == null;
     }
 
@@ -188,6 +247,19 @@ class InMemoryHistoryManagerTest {
         assert result.next() == "item_d";
         assert result.next() == "item_c";
         assert result.next() == "item_b";
+        assert result.next() == null;
+    }
+
+    @Test
+    void appendWithSizeLimitOfOneEvictsOnEveryAppend() {
+        InMemoryHistoryManager limitedHistory = new InMemoryHistoryManager(1);
+        limitedHistory.append("item_a");
+        limitedHistory.append("item_b");
+        limitedHistory.append("item_c");
+
+        HistorySearch result = limitedHistory.search("item_");
+
+        assert result.next() == "item_c";
         assert result.next() == null;
     }
 
