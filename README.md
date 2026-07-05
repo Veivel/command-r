@@ -13,9 +13,15 @@ Here is a 30-second video showcasing Command R:
 
 ![](docs/command-r-demo.gif)
 
-## Features
+## How to Use
 
-... TODO
+- Activate Search: Activate Search Mode while the chat is open. Use the "Next" keybind (CTRL + R default)
+
+- Next: Find the next item (in reverse) that matches your search query.
+
+- Previous: Go back to the previous item (go forward) that last matched your search query. Use the "Previous" keybind (CTRL + SHIFT + R default)
+
+- Change Keybinds: You can change the keybinds above in Options > Controls > Keybinds > Command R
 
 ## Support & Contribution
 
