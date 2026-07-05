@@ -4,13 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'The tag name to be used for this release.'
+        # TODO: redundant input, because the source of truth is already gradle.properties["version"]
+        description: 'The tag name to be used for this release. Must match'
         required: true
         type: string
       prerelease:
-        description: 'Whether this tag is a pre-release or not. Default to false'
+        description: 'Whether this tag is a pre-release or not (`true` or `false`).'
         required: true
-        type: boolean
+        type: string
   # push:
   #   tags:
   #     - '*'
@@ -30,18 +31,21 @@ jobs:
         echo "Inputs: $REF_TYPE, $GITHUB_REF, $TAG"
         if [[ "$REF_TYPE" = "tag" ]]; then
           echo "Run via tag!"
-          FINAL_TAG=$GITHUB_REF
+          ARTIFACT_TAG=$GITHUB_REF
         elif [[ ! -z "$TAG" ]]; then
           echo "Run via workflow dispatch, tag is supplied: $TAG"
-          FINAL_TAG=$TAG
+          ARTIFACT_TAG=$TAG
         else
           echo "Run via workflow dispatch, tag not supplied"
         fi
 
         if [[ "$PRERELEASE" = "true" ]]; then
-          FINAL_TAG="$FINAL_TAG"-SNAPSHOT
+          FINAL_TAG="$ARTIFACT_TAG"-SNAPSHOT
+        else
+          FINAL_TAG=$ARTIFACT_TAG
         fi
 
+        echo "ARTIFACT_TAG=$ARTIFACT_TAG" >> $GITHUB_ENV
         echo "FINAL_TAG=$FINAL_TAG" >> $GITHUB_ENV
       env:
         REF_TYPE: ${{ github.ref_type }}
@@ -70,10 +74,24 @@ jobs:
 
     - name: Show output files
       run: |
-        echo "$GITHUB_WORKSPACE, $FINAL_TAG" && \
-        ls $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar && \
-        ls $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-$FINAL_TAG.jar && \
-        ls $GITHUB_WORKSPACE/neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
+        echo "$(pwd), $FINAL_TAG, $ARTIFACT_TAG"
+        
+        if [[ "$PRERELEASE" = "true" ]]; then
+          $(cd ./fabric/build/libs/ && mv commandr-fabric-*-$ARTIFACT_TAG.jar commandr-fabric-*-$FINAL_TAG.jar)
+          $(cd ./forge/build/libs && mv commandr-forge-*-$ARTIFACT_TAG.jar commandr-forge-*-$FINAL_TAG.jar)
+          $(cd ./neoforge/build/libs && mv commandr-neoforge-*-$ARTIFACT_TAG.jar commandr-neoforge-*-$FINAL_TAG.jar)
+        fi
+
+        ls ./fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar && \
+        ls ./forge/build/libs/commandr-forge-*-$FINAL_TAG.jar && \
+        ls ./neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
+
+    - name: Get latest release info
+      id: get-changelog
+      uses: release-flow/keep-a-changelog-action@v2
+      with:
+        command: query
+        version: ${{ env.FINAL_TAG }}
 
     - name: Create Release
       uses: softprops/action-gh-release@v3
@@ -81,6 +99,7 @@ jobs:
         name: ${{ env.FINAL_TAG }}
         tag_name: ${{ env.FINAL_TAG }}
         generate_release_notes: true
+        body: ${{ steps.get-changelog.outputs.release-notes }}
         prerelease: ${{ inputs.prerelease }}
         files: |
           fabric/build/libs/commandr-fabric-*-${{ env.FINAL_TAG }}.jar

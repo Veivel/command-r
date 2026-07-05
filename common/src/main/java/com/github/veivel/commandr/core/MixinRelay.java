@@ -42,6 +42,7 @@ public final class MixinRelay {
     }
 
     public static void onUseSuggestion() {
+        Commandr.logger.debug("onUseSuggestion running");
         suggestionController.onUseSuggestion();
         chatScreenController.clearSearch();
     }
