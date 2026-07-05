@@ -83,6 +83,7 @@ jobs:
         generate_release_notes: true
         prerelease: ${{ inputs.prerelease }}
         files: |
-          $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-${{ env.FINAL_TAG }}.jar
-          $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-${{ env.FINAL_TAG }}.jar
-          $GITHUB_WORKSPACE/neoforge/build/libs/commandr-neoforge-*-${{ env.FINAL_TAG }}.jar
+          fabric/build/libs/commandr-fabric-*-${{ env.FINAL_TAG }}.jar
+          forge/build/libs/commandr-forge-*-${{ env.FINAL_TAG }}.jar
+          neoforge/build/libs/commandr-neoforge-*-${{ env.FINAL_TAG }}.jar
+        fail_on_unmatched_files: true
