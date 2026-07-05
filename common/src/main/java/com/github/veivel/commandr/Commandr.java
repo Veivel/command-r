@@ -26,7 +26,7 @@ public class Commandr {
     }
 
     public static void initialize(BalmRegistrars registrars) {
-        Balm.config().registerConfig(CommandrConfig.class);
+        // Balm.config().registerConfig(CommandrConfig.class);
 
         HistoryManager historyManager = new InMemoryHistoryManager();
         ChatScreenState chatScreenState = new ChatScreenState();

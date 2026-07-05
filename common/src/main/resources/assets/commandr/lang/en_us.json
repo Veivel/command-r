@@ -1,5 +1,8 @@
 {
   "key.category.commandr.default": "Command R (Reverse Search)",
   "key.commandr.search": "Next / Activate Search",
-  "key.commandr.previous": "Previous"
+  "key.commandr.previous": "Previous",
+  "commandr.configuration.title": "Command R Options",
+  "commandr.configuration.searchOnlyCommands": "Search Only Commands?",
+  "commandr.configuration.searchOnlyCommands.tooltip": "If set to True, Command R will only search through commands and will ignore chat messages. If set to False (default), everything will be searched."
 }
