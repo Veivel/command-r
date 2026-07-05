@@ -25,21 +25,28 @@ jobs:
 
     steps:
 
-    - name: Validate variables
+    - name: Consolidate variables
       run: |
         echo "Inputs: $REF_TYPE, $GITHUB_REF, $TAG"
         if [[ "$REF_TYPE" = "tag" ]]; then
           echo "Run via tag!"
-          echo "FINAL_TAG=$GITHUB_REF" >> $GITHUB_ENV
+          FINAL_TAG=$GITHUB_REF
         elif [[ ! -z "$TAG" ]]; then
           echo "Run via workflow dispatch, tag is supplied: $TAG"
-          echo "FINAL_TAG=$TAG" >> $GITHUB_ENV
+          FINAL_TAG=$TAG
         else
           echo "Run via workflow dispatch, tag not supplied"
         fi
+
+        if [[ "$PRERELEASE" = "true" ]]; then
+          FINAL_TAG=$FINAL_TAG"-PRERELEASE
+        fi
+
+        echo "FINAL_TAG=$FINAL_TAG" >> $GITHUB_ENV
       env:
         REF_TYPE: ${{ github.ref_type }}
         TAG: ${{ inputs.tag }}
+        PRERELEASE: ${{ inputs.prerelease }}
 
     - name: Check out repository
       uses: actions/checkout@v7
@@ -63,6 +70,7 @@ jobs:
 
     - name: Show output files
       run: |
+        echo "$GITHUB_WORKSPACE, $FINAL_TAG" && \
         ls $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar && \
         ls $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-$FINAL_TAG.jar && \
         ls $GITHUB_WORKSPACE/neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
@@ -70,11 +78,11 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v3
       with:
-        name: $FINAL_TAG
-        tag_name: $FINAL_TAG
+        name: ${{ env.FINAL_TAG }}
+        tag_name: ${{ env.FINAL_TAG }}
         generate_release_notes: true
         prerelease: ${{ inputs.prerelease }}
         files: |
-          $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar
-          $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-$FINAL_TAG.jar
-          $GITHUB_WORKSPACE/neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
+          $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-${{ env.FINAL_TAG }}.jar
+          $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-${{ env.FINAL_TAG }}.jar
+          $GITHUB_WORKSPACE/neoforge/build/libs/commandr-neoforge-*-${{ env.FINAL_TAG }}.jar
