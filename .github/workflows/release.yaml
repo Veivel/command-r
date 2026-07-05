@@ -74,7 +74,7 @@ jobs:
 
     - name: Show output files
       run: |
-        echo "$(pwd), $FINAL_TAG, $ARTIFACT_TAG"
+        echo "$(pwd), $FINAL_TAG, $ARTIFACT_TAG, $PRERELEASE"
         
         if [[ "$PRERELEASE" = "true" ]]; then
           $(cd ./fabric/build/libs/ && mv commandr-fabric-*-$ARTIFACT_TAG.jar commandr-fabric-*-$FINAL_TAG.jar)
@@ -85,6 +85,8 @@ jobs:
         ls ./fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar && \
         ls ./forge/build/libs/commandr-forge-*-$FINAL_TAG.jar && \
         ls ./neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
+      env:
+        PRERELEASE: ${{ inputs.prerelease }}
 
     - name: Get latest release info
       id: get-changelog
