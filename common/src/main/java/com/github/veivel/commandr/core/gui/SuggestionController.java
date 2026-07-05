@@ -36,7 +36,7 @@ public class SuggestionController {
         if (screen == null) {
             return;
         }
-        
+
         if (screen instanceof ChatScreen chatScreen) {
             CommandSuggestions commandSuggestions = (
                 (ChatScreenAccessor) chatScreen
