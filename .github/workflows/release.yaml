@@ -59,7 +59,7 @@ jobs:
       run: chmod +x ./gradlew
 
     - name: Build with Gradle
-      run: ./gradlew :fabricbuild
+      run: ./gradlew test spotlessCheck build
 
     - name: Show output files
       run: |
@@ -70,10 +70,10 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v3
       with:
-        name: $FINAL-TAG
+        name: $FINAL_TAG
         tag_name: $FINAL_TAG
         generate_release_notes: true
-        prerelease: false
+        prerelease: ${{ inputs.prerelease }}
         files: |
           $GITHUB_WORKSPACE/fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar
           $GITHUB_WORKSPACE/forge/build/libs/commandr-forge-*-$FINAL_TAG.jar
