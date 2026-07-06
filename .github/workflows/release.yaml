@@ -28,21 +28,26 @@ jobs:
 
     - name: Consolidate variables
       run: |
-        echo "Inputs: $REF_TYPE, $GITHUB_REF, $TAG"
+        echo "Inputs: $REF_TYPE, $GITHUB_REF, $TAG, $PRERELEASE"
+
         if [[ "$REF_TYPE" = "tag" ]]; then
-          echo "Run via tag!"
+          echo "Deployment run via push on tag!"
           ARTIFACT_TAG=$GITHUB_REF
         elif [[ ! -z "$TAG" ]]; then
-          echo "Run via workflow dispatch, tag is supplied: $TAG"
+          echo "Deployment run via dispatch, tag is supplied: $TAG"
           ARTIFACT_TAG=$TAG
         else
-          echo "Run via workflow dispatch, tag not supplied"
+          echo "Deployment run via dispatch, tag not supplied. Exiting."
+          exit 1
         fi
 
         if [[ "$PRERELEASE" = "true" ]]; then
           FINAL_TAG="$ARTIFACT_TAG"-SNAPSHOT
+        elif [[ "$PRERELEASE" = "false" ]]; then
+          FINAL_TAG="$ARTIFACT_TAG"
         else
-          FINAL_TAG=$ARTIFACT_TAG
+          echo "Prerelease value is not true or false. Exiting."
+          exit 1
         fi
 
         echo "ARTIFACT_TAG=$ARTIFACT_TAG" >> $GITHUB_ENV
@@ -72,30 +77,35 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew test spotlessCheck build
 
-    - name: Show output files
+
+      # example for PRERELEASE: forge/build/libs/commandr-forge-26.1-1.0.0.jar 
+      # renamed into forge/build/libs/commandr-forge-26.1-1.0.0-SNAPSHOT.jar
+    - name: Finalize Artifacts
       run: |
         echo "$(pwd), $FINAL_TAG, $ARTIFACT_TAG, $PRERELEASE"
         
         if [[ "$PRERELEASE" = "true" ]]; then
-          $(cd ./fabric/build/libs/ && mv commandr-fabric-*-$ARTIFACT_TAG.jar commandr-fabric-*-$FINAL_TAG.jar)
-          $(cd ./forge/build/libs && mv commandr-forge-*-$ARTIFACT_TAG.jar commandr-forge-*-$FINAL_TAG.jar)
-          $(cd ./neoforge/build/libs && mv commandr-neoforge-*-$ARTIFACT_TAG.jar commandr-neoforge-*-$FINAL_TAG.jar)
+          for dir in fabric forge neoforge; do
+            for f in ./"$dir"/build/libs/commandr-"$dir"-*-"$ARTIFACT_TAG".jar; do
+              mv "$f" "${f%-"$ARTIFACT_TAG".jar}-$FINAL_TAG.jar"
+            done
+          done
         fi
-
-        ls ./fabric/build/libs/commandr-fabric-*-$FINAL_TAG.jar && \
-        ls ./forge/build/libs/commandr-forge-*-$FINAL_TAG.jar && \
-        ls ./neoforge/build/libs/commandr-neoforge-*-$FINAL_TAG.jar
+        
+        for dir in fabric forge neoforge; do
+          ls ./"$dir"/build/libs/commandr-"$dir"-*-"$FINAL_TAG".jar || exit 1
+        done
       env:
         PRERELEASE: ${{ inputs.prerelease }}
 
-    - name: Get latest release info
+    - name: Get Release Notes
       id: get-changelog
       uses: release-flow/keep-a-changelog-action@v2
       with:
         command: query
         version: ${{ env.ARTIFACT_TAG }}
 
-    - name: Create Release
+    - name: Create a Release
       uses: softprops/action-gh-release@v3
       with:
         name: ${{ env.FINAL_TAG }}
