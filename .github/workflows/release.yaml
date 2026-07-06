@@ -5,12 +5,16 @@ on:
     inputs:
       tag:
         # TODO: redundant input, because the source of truth is already gradle.properties["version"]
-        description: 'The tag name to be used for this release. Must match'
+        description: 'The tag name to be used for this release. Must match gradle.properties.'
         required: true
         type: string
       prerelease:
         description: 'Whether this tag is a pre-release or not (`true` or `false`).'
         required: true
+        type: string
+      previous_tag:
+        description: "Previous tag to use as comparison base (optional)."
+        required: false
         type: string
   # push:
   #   tags:
@@ -113,6 +117,7 @@ jobs:
         generate_release_notes: true
         body: ${{ steps.get-changelog.outputs.release-notes }}
         prerelease: ${{ inputs.prerelease }}
+        previous_tag: ${{ inputs.previous_tag }}
         files: |
           fabric/build/libs/commandr-fabric-*-${{ env.FINAL_TAG }}.jar
           forge/build/libs/commandr-forge-*-${{ env.FINAL_TAG }}.jar
