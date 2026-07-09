@@ -19,7 +19,8 @@ public class ChatComponentMixin {
     }
 
     // Inject class constructor
-    @Inject(at = @At("HEAD"), method = "<init>")
+    // We choose TAIL as injection point because HEAD is rejected by Sponge mixin (for Forge)
+    @Inject(at = @At("TAIL"), method = "<init>")
     private static void ChatComponent(
         final Minecraft minecraft,
         CallbackInfo ci
