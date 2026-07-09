@@ -7,10 +7,10 @@ import net.minecraft.client.gui.screens.Screen;
 public final class MinecraftScreen {
 
     public static Screen getCurrent() {
-        return Minecraft.getInstance().screen;
+        return Minecraft.getInstance().gui.screen();
     }
 
     public static boolean isCurrentChatScreen() {
-        return (Minecraft.getInstance().screen instanceof ChatScreen);
+        return (Minecraft.getInstance().gui.screen() instanceof ChatScreen);
     }
 }

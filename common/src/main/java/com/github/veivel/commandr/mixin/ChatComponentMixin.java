@@ -3,6 +3,7 @@ package com.github.veivel.commandr.mixin;
 import com.github.veivel.commandr.core.MixinRelay;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.CommandHistory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChatComponent.class)
-public class ChatComponentMixin {
+public class ChatComponentMixin extends Object {
 
     @Inject(at = @At("HEAD"), method = "addRecentChat")
     public void addRecentChat(final String message, CallbackInfo ci) {
@@ -25,9 +26,10 @@ public class ChatComponentMixin {
         final Minecraft minecraft,
         CallbackInfo ci
     ) {
-        List<String> list = new ArrayList<String>(
-            minecraft.commandHistory().history()
+        CommandHistory commandHistory = new CommandHistory(
+            minecraft.gameDirectory.toPath()
         );
+        List<String> list = new ArrayList<String>(commandHistory.history());
         MixinRelay.addAllToHistory(list);
     }
 }

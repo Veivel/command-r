@@ -1,17 +1,19 @@
 [versions]
+# All except kuma can be found in: https://github.com/TwelveIterations/balm-mod/blob/26.2/gradle/libs.versions.toml
+
 # See https://maven.twelveiterations.com/service/rest/repository/browse/maven-public/net/blay09/mods/balm-common/
-balm = "26.1.2.6"
-minecraft = "26.1.2"
+balm = "26.1.2.8"
+kuma = "26.1.2.8"
+minecraft = "26.2"
 # See https://projects.neoforged.net/neoforged/neoform
-neoForm = "26.1.2-1"
+neoForm = "26.2-1"
 # See https://projects.neoforged.net/neoforged/neoforge
-neoForge = "26.1.2.75"
+neoForge = "26.2.0.8-beta"
 # See https://files.minecraftforge.net
-forge = "64.0.8"
+forge = "65.0.3"
 # See https://fabricmc.net/develop/
-fabricApi = "0.151.0+26.1.2"
+fabricApi = "0.152.1+26.2"
 fabricLoader = "0.19.3"
-kuma = "26.1.2.2"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
