@@ -89,14 +89,14 @@ jobs:
         echo "$(pwd), $FINAL_TAG, $ARTIFACT_TAG, $PRERELEASE"
         
         if [[ "$PRERELEASE" = "true" ]]; then
-          for dir in forge neoforge; do
+          for dir in fabric neoforge; do
             for f in ./"$dir"/build/libs/commandr-"$dir"-*-"$ARTIFACT_TAG".jar; do
               mv "$f" "${f%-"$ARTIFACT_TAG".jar}-$FINAL_TAG.jar"
             done
           done
         fi
         
-        for dir in forge neoforge; do
+        for dir in fabric neoforge; do
           ls ./"$dir"/build/libs/commandr-"$dir"-*-"$FINAL_TAG".jar || exit 1
         done
       env:
