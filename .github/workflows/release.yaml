@@ -82,21 +82,21 @@ jobs:
       run: ./gradlew test spotlessCheck build
 
 
-      # example for PRERELEASE: forge/build/libs/commandr-forge-26.1-1.0.0.jar 
-      # renamed into forge/build/libs/commandr-forge-26.1-1.0.0-SNAPSHOT.jar
+      # example for PRERELEASE: fabric/build/libs/commandr-fabric-26.1-1.0.0.jar 
+      # renamed into fabric/build/libs/commandr-fabric-26.1-1.0.0-SNAPSHOT.jar
     - name: Finalize Artifacts
       run: |
         echo "$(pwd), $FINAL_TAG, $ARTIFACT_TAG, $PRERELEASE"
         
         if [[ "$PRERELEASE" = "true" ]]; then
-          for dir in fabric forge neoforge; do
+          for dir in forge neoforge; do
             for f in ./"$dir"/build/libs/commandr-"$dir"-*-"$ARTIFACT_TAG".jar; do
               mv "$f" "${f%-"$ARTIFACT_TAG".jar}-$FINAL_TAG.jar"
             done
           done
         fi
         
-        for dir in fabric forge neoforge; do
+        for dir in forge neoforge; do
           ls ./"$dir"/build/libs/commandr-"$dir"-*-"$FINAL_TAG".jar || exit 1
         done
       env:
@@ -120,6 +120,5 @@ jobs:
         previous_tag: ${{ inputs.previous_tag }}
         files: |
           fabric/build/libs/commandr-fabric-*-${{ env.FINAL_TAG }}.jar
-          forge/build/libs/commandr-forge-*-${{ env.FINAL_TAG }}.jar
           neoforge/build/libs/commandr-neoforge-*-${{ env.FINAL_TAG }}.jar
         fail_on_unmatched_files: true
